@@ -1,27 +1,35 @@
 package skillsI;
 
+import java.util.ArrayDeque;
+
 public class N20 {
     public boolean isValid(String s) {
-        int flag1 = 0, flag2 = 0, flag3 = 0;
+        if (s.length() < 2) return false;
+        ArrayDeque<Character> collection = new ArrayDeque<>();
         for (int i = 0; i < s.length(); i++) {
-            if (s.charAt(i) == '(') {
-                flag1 += 1;
-            } else if (s.charAt(i) == ')') {
-                flag1 -= 1;
-            } else if (s.charAt(i) == '[') {
-                flag2 += 1;
-            } else if (s.charAt(i) == ']') {
-                flag2 -= 1;
-            } else if (s.charAt(i) == '{') {
-                flag3 += 1;
-            } else if (s.charAt(i) == '}') {
-                flag3 -= 1;
-            }
-            if(flag1 == -1 && flag2 == -1 && flag3 == -1){
-                return false;
+            if(s.charAt(i) == '(' || s.charAt(i) == '[' || s.charAt(i) == '{'){
+                collection.add(s.charAt(i));
+            } else if (s.charAt(i) == ')' || s.charAt(i) == ']' || s.charAt(i) == '}') {
+                if(collection.size() <= 0){
+                    return false;
+                }
+                char catchIt = collection.pollLast();
+                if(catchIt == '('){
+                    if(s.charAt(i) != ')'){
+                        return false;
+                    }
+                } else if(catchIt == '['){
+                    if(s.charAt(i) != ']'){
+                        return false;
+                    }
+                } else if(catchIt == '{'){
+                    if(s.charAt(i) != '}'){
+                        return false;
+                    }
+                }
             }
         }
-        return (flag1 == 0 && flag2 == 0 && flag3 == 0);
+        return collection.isEmpty();
     }
 }
 
@@ -29,6 +37,6 @@ public class N20 {
     class Test20 {
         public static void main(String[] args) {
             N20 n20 = new N20();
-            System.out.println(n20.isValid("()[]{}{}(]"));
+            System.out.println(n20.isValid(")(){}"));
         }
     }
